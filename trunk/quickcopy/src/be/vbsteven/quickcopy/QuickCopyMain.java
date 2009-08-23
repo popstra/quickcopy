@@ -125,6 +125,45 @@ public class QuickCopyMain extends Activity {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+	private void editEntry(final String oldValue) {
+
+		final EditText edit = new EditText(this);
+		edit.setText(oldValue);
+		edit.setEms(20);
+		edit.setLines(5);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Edit entry").setView(edit).setCancelable(true)
+				.setPositiveButton("Save",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								String value = edit.getText().toString();
+								if (!value.equals("")) {
+									DBHelper.get(QuickCopyMain.this).updateEntry(oldValue, value);
+									refresh();
+								}
+							}
+						}).setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						}).setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								String value = edit.getText().toString();
+								if (!value.equals("")) {
+									DBHelper.get(QuickCopyMain.this).deleteEntry(oldValue);
+									refresh();
+								}
+							}
+						});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 
 	protected void refresh() {
 		setContentView(R.layout.main);
@@ -165,11 +204,9 @@ public class QuickCopyMain extends Activity {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					Intent i = new Intent();
-					i.setClass(QuickCopyMain.this, EditEntryActivity.class);
-					i.putExtra("entry", (String) arg0.getAdapter()
+					
+					editEntry((String) arg0.getAdapter()
 							.getItem(arg2));
-					startActivityForResult(i, 1);
 					return false;
 				}
 
