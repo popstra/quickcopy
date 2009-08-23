@@ -22,6 +22,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 
 
 public class DBHelper {
@@ -36,7 +37,7 @@ public class DBHelper {
 	
 	public static DBHelper get(Context context) {
 		
-		if (instance == null) {
+		if (instance == null) { 
 			instance = new DBHelper(context);
 		} 
 		return instance;
@@ -64,18 +65,27 @@ public class DBHelper {
 	}
 	
 	public void addEntry(String entry) {
-		ContentValues cv = new ContentValues();
-		cv.put("value", entry);
-		db.insert(TABLE_NAME, null, cv);
+//		ContentValues cv = new ContentValues();
+//		cv.put("value", entry);
+//		db.insert(TABLE_NAME, null, cv);
+		SQLiteStatement statement = db.compileStatement("INSERT INTO " + TABLE_NAME + " VALUES (?, ?)");
+		statement.bindNull(1);
+		statement.bindString(2, entry);
+		statement.execute();
 	}
 	
 	public void updateEntry(String oldValue, String newValue) {
-		String query = "UPDATE " + TABLE_NAME + " SET value = '" + newValue + "' WHERE value = '" + oldValue + "';";
-		db.execSQL(query);
+//		String query = "UPDATE " + TABLE_NAME + " SET value = '" + newValue + "' WHERE value = '" + oldValue + "';";
+		SQLiteStatement statement = db.compileStatement("UPDATE " + TABLE_NAME + " SET value = ? WHERE value = ?;");
+		statement.bindString(1, newValue);
+		statement.bindString(2, oldValue);
+		statement.execute();
 	}
 
 	public void deleteEntry(String oldValue) {
 		String query = "DELETE FROM " + TABLE_NAME + " WHERE value = '" + oldValue + "';";
-		db.execSQL(query);
+		SQLiteStatement statement = db.compileStatement("DELETE FROM " + TABLE_NAME + " WHERE value = ?;");
+		statement.bindString(1, oldValue);
+		statement.execute();
 	}
 }
