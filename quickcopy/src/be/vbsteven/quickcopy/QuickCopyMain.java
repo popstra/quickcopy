@@ -172,7 +172,8 @@ public class QuickCopyMain extends Activity {
 		ArrayList<String> entries = db.getEntries();
 		if (entries.size() == 0) {
 			TextView tv = (TextView)findViewById(R.id.textEntries);
-			tv.setText("Your list of entries is still empty.\n\nUse the menu button on your device to add new entries to your Quickcopy list");
+			tv.setText("Your list of entries is still empty\n\nUse the menu button on your device to add new entries to your Quickcopy list" 
+					+  "\n\nItems will be sorted alphabetically");
 		} else {
 			TextView tv = (TextView)findViewById(R.id.textEntries);
 			tv.setText("Tap to copy / Long press to edit");

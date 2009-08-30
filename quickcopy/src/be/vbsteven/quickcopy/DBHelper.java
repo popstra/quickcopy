@@ -17,6 +17,7 @@
 */
 package be.vbsteven.quickcopy;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -61,6 +62,8 @@ public class DBHelper {
         		values.add(c.getString(columnId));
         	} while (c.moveToNext());
         }
+        
+        Collections.sort(values);
         return values;
 	}
 	
